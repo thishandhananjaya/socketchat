@@ -3,7 +3,7 @@ import {useState} from "react";
 
 
 function Chat({socket,username,room}){
-    const [currentMessage,setCurrentMessage]=useState("");
+    const [currentMessage,setCurrentMessage]=useState([]);
     const [messageList,setmessageList]=useState([]);
     const sendMessage= async () => {
         if(currentMessage !==  ""){
