@@ -214,3 +214,7 @@ body{
 #other::before{
   display:none !important;
 }
+
+.message {
+  margin-bottom: 14px; 
+}
