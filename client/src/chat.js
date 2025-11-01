@@ -5,25 +5,34 @@ import {useState} from "react";
 function Chat({socket,username,room}){
     const [currentMessage,setCurrentMessage]=useState([]);
     const [messageList,setmessageList]=useState([]);
-    const sendMessage= async () => {
-        if(currentMessage !==  ""){
-            const messageData ={
-                room:room,
-                author:username,
-                message:currentMessage,
-                time:new Date(Date.now()).getHours()+":"+ new Date(Date.now()).getMinutes(),
-            };
-            await socket.emit("send_message",messageData);
+   const sendMessage = async () => {
+    if(currentMessage !== ""){
+        const messageData ={
+            room:room,
+            author:username,
+            message:currentMessage,
+            time:new Date(Date.now()).getHours()+":"+ new Date(Date.now()).getMinutes(),
+        };
+        await socket.emit("send_message",messageData);
+        setCurrentMessage("");
+    }
+};
 
 
-        }
+    useEffect(() => {
+
+    const handleReceiveMessage = (data) => {
+        setmessageList((list) => [...list, data]);
     };
 
-    useEffect(()=>{
-        socket.on("receive_message",(data)=>{
-       
-            setmessageList((list)=>[...list,data]);
-        })},[socket]);
+    socket.on("receive_message", handleReceiveMessage);
+
+    return () => {
+        socket.off("receive_message", handleReceiveMessage);
+    };
+
+}, [socket]);
+
 
     return(
         <div className="chat-window">
